@@ -3,182 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ninh Bình Travel Jackpot Slot Machine 3D</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Ninh Binh Travel Jackpot 3D</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Cabinet+Grotesk:wght@800;900&display=swap" rel="stylesheet">
     
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        heading: ['"Cabinet Grotesk"', 'sans-serif'],
-                    },
-                    colors: {
-                        gold: {
-                            100: '#FFF9E6',
-                            300: '#FFE082',
-                            400: '#FFCA28',
-                            500: '#FFB300',
-                            600: '#FF8F00',
-                            700: '#FF6F00',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Google Fonts: Be Vietnam Pro with full Vietnamese subset -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         body {
-            background: #0d1117;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #0b0f19;
             color: #f3f4f6;
             overflow-x: hidden;
             user-select: none;
         }
 
-        /* Gold Gradient Frame */
-        .gold-border {
-            border: 4px solid transparent;
-            background: linear-gradient(#181d28, #11141e) padding-box,
-                        linear-gradient(135deg, #FFE082, #FFB300, #B78103, #FFCA28) border-box;
+        /* 3D Machine Layout & Frame */
+        .casino-frame {
+            background: linear-gradient(145deg, #1f293d, #111827);
+            box-shadow: 
+                0 0 35px rgba(234, 179, 8, 0.25),
+                inset 0 0 15px rgba(255, 255, 255, 0.05),
+                0 20px 25px -5px rgba(0, 0, 0, 0.7);
+            border: 3px solid #d97706;
         }
 
-        /* 3D Reel Cylinder Container */
-        .reel-viewport {
-            height: 220px;
+        .gold-border {
+            border: 2px solid #f59e0b;
+            background: linear-gradient(135deg, #f59e0b 0%, #b45309 50%, #78350f 100%);
+        }
+
+        /* 3D Reel Slot Viewport */
+        .slot-viewport {
             perspective: 1000px;
             overflow: hidden;
             position: relative;
-            background: radial-gradient(circle, #1a2233 0%, #0a0d14 100%);
+            background: #030712;
             border-radius: 12px;
-            box-shadow: inset 0 0 25px rgba(0,0,0,0.9), inset 0 0 10px rgba(255,179,0,0.2);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
         }
 
-        .reel-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.1s linear;
-        }
-
-        /* Individual item card inside reel cylinder */
-        .reel-card {
+        .slot-viewport::before, .slot-viewport::after {
+            content: '';
             position: absolute;
-            left: 4px;
-            right: 4px;
-            height: 190px;
-            backface-visibility: hidden;
-            border-radius: 10px;
-            background: linear-gradient(180deg, rgba(30,41,59,0.95) 0%, rgba(15,23,42,0.98) 100%);
-            border: 1px solid rgba(255, 215, 0, 0.25);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-            padding: 8px;
-            transform-origin: center center;
-        }
-
-        /* Glass / Shading Overlay over viewport */
-        .viewport-overlay {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            background: linear-gradient(180deg, 
-                rgba(10,13,20,0.92) 0%, 
-                rgba(10,13,20,0.0) 25%, 
-                rgba(10,13,20,0.0) 75%, 
-                rgba(10,13,20,0.92) 100%);
-            z-index: 10;
-        }
-
-        .payline-guide {
-            position: absolute;
-            top: 50%;
             left: 0;
             right: 0;
-            height: 195px;
-            transform: translateY(-50%);
-            border-top: 2px solid rgba(255, 193, 7, 0.6);
-            border-bottom: 2px solid rgba(255, 193, 7, 0.6);
-            background: rgba(255, 193, 7, 0.03);
-            pointer-events: none;
-            z-index: 5;
-            box-shadow: 0 0 15px rgba(255, 193, 7, 0.15);
-        }
-
-        /* Flashing Neon Lights */
-        .neon-light {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: #ffb300;
-            box-shadow: 0 0 8px #ffb300;
-            animation: blink 1s infinite alternate;
-        }
-
-        .neon-light:nth-child(even) {
-            animation-delay: 0.5s;
-            background-color: #00e676;
-            box-shadow: 0 0 8px #00e676;
-        }
-
-        @keyframes blink {
-            0% { opacity: 0.3; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1.1); }
-        }
-
-        /* 3D Mechanical Lever */
-        .lever-container {
-            position: relative;
-            width: 50px;
-            height: 280px;
-            cursor: pointer;
-        }
-
-        .lever-base {
-            position: absolute;
-            bottom: 20px;
-            left: 10px;
-            width: 30px;
-            height: 60px;
-            background: linear-gradient(90deg, #333, #666, #222);
-            border-radius: 8px;
-            box-shadow: 3px 5px 10px rgba(0,0,0,0.7);
-        }
-
-        .lever-rod {
-            position: absolute;
-            bottom: 50px;
-            left: 20px;
-            width: 10px;
-            height: 180px;
-            background: linear-gradient(90deg, #ddd, #fff, #999);
-            border-radius: 5px;
-            transform-origin: bottom center;
-            transition: transform 0.15s ease-out;
-            box-shadow: -2px 2px 5px rgba(0,0,0,0.5);
-        }
-
-        .lever-knob {
-            position: absolute;
-            top: -20px;
-            left: -15px;
-            width: 40px;
             height: 40px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #ff5252, #c62828, #5f0000);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.6), inset -2px -2px 6px rgba(0,0,0,0.5);
+            z-index: 10;
+            pointer-events: none;
         }
 
-        .lever-pulled .lever-rod {
-            transform: rotateX(65deg) scaleY(0.6);
+        .slot-viewport::before {
+            top: 0;
+            background: linear-gradient(to bottom, rgba(3, 7, 18, 0.95), transparent);
+        }
+
+        .slot-viewport::after {
+            bottom: 0;
+            background: linear-gradient(to top, rgba(3, 7, 18, 0.95), transparent);
+        }
+
+        /* Slot Reel Strip Container */
+        .reel-strip {
+            position: relative;
+            width: 100%;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .slot-card {
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: #111827;
+            transition: background-color 0.2s;
+        }
+
+        /* Glassmorphism modal */
+        .glass-modal {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
         /* Custom Scrollbar */
@@ -186,534 +105,590 @@
             width: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #111827;
+            background: #0f172a;
         }
         ::-webkit-scrollbar-thumb {
             background: #374151;
-            border-radius: 4px;
+            border-radius: 3px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
+            background: #f59e0b;
         }
 
-        .bounce-anim {
-            animation: bounceStop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* Glowing Neon Effects */
+        .neon-gold {
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.6), 0 0 20px rgba(245, 158, 11, 0.3);
         }
 
-        @keyframes bounceStop {
-            0% { transform: translateY(-12px); }
-            70% { transform: translateY(5px); }
-            100% { transform: translateY(0); }
+        /* Button Hover & Active Effects */
+        .btn-jackpot {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+            transition: all 0.15s ease;
+        }
+        .btn-jackpot:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6);
+        }
+        .btn-jackpot:active {
+            transform: translateY(1px);
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between antialiased">
+<body class="min-h-screen flex flex-col items-center justify-between p-3 md:p-6 bg-slate-950">
 
-    <!-- TOP BAR / HEADER -->
-    <header class="py-4 px-6 bg-slate-900/80 backdrop-blur border-b border-slate-800 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/20">
-                    NB
-                </div>
-                <div>
-                    <h1 class="font-heading font-black text-xl text-white tracking-wide">NINH BÌNH TRAVEL</h1>
-                    <p class="text-xs text-amber-400/90 font-medium">Trải nghiệm Lịch trình Quay Số 3D Sống Động</p>
-                </div>
-            </div>
-
-            <!-- Mode Selector Filter -->
-            <div class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800">
-                <button onclick="setFilterMode('ALL')" id="btn-mode-ALL" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow">
-                    <i class="fa-solid fa-cubes mr-1.5"></i> Quay Tất Cả (5 Vùng)
-                </button>
-                <button onclick="setFilterMode('1N1D')" id="btn-mode-1N1D" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">
-                    1N1Đ
-                </button>
-                <button onclick="setFilterMode('2N1D')" id="btn-mode-2N1D" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">
-                    2N1Đ
-                </button>
-                <button onclick="setFilterMode('3N2D')" id="btn-mode-3N2D" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">
-                    3N2Đ
-                </button>
-            </div>
+    <!-- TOP HEADER -->
+    <header class="w-full max-w-6xl text-center mb-4">
+        <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-slate-900 border border-amber-500/30 mb-2">
+            <span class="flex h-2.5 w-2.5 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+            </span>
+            <span class="text-xs uppercase tracking-widest text-amber-400 font-semibold">Trải nghiệm du lịch thông minh Ninh Bình</span>
         </div>
+        <h1 class="text-2xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-500 to-yellow-200 uppercase tracking-tight">
+            Ninh Bình Travel Slot Machine 3D
+        </h1>
+        <p class="text-xs md:text-sm text-slate-400 mt-1">Quay ngẫu nhiên lịch trình hoàn hảo cho chuyến đi của bạn</p>
     </header>
 
-    <!-- MAIN 3D SLOT MACHINE AREA -->
-    <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-1 flex flex-col gap-6">
+    <main class="w-full max-w-6xl flex flex-col items-center gap-6">
 
-        <!-- 3D Jackpot Cabinet Frame -->
-        <div class="gold-border rounded-3xl p-4 md:p-6 bg-slate-900 shadow-2xl relative">
+        <!-- SLOT MACHINE CONTAINER -->
+        <div class="w-full casino-frame rounded-2xl p-3 md:p-6 relative">
             
-            <!-- Neon Lights Header Rim -->
+            <!-- LED Lights strip along top -->
             <div class="flex justify-between items-center px-4 mb-4">
-                <div class="flex gap-2.5">
-                    <div class="neon-light"></div>
-                    <div class="neon-light"></div>
-                    <div class="neon-light"></div>
-                    <div class="neon-light"></div>
+                <div class="flex gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-400 animate-pulse delay-75"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse delay-150"></div>
                 </div>
-                <div class="text-center px-4 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                    Jackpot Reel Engine
+                <div class="text-xs font-bold text-amber-400/80 uppercase tracking-widest flex items-center gap-2">
+                    <i class="fa-solid fa-compass"></i> Gợi Ý Lịch Trình Tự Động
                 </div>
-                <div class="flex gap-2.5">
-                    <div class="neon-light"></div>
-                    <div class="neon-light"></div>
-                    <div class="neon-light"></div>
-                    <div class="neon-light"></div>
+                <div class="flex gap-2">
+                    <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse delay-150"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-400 animate-pulse delay-75"></div>
+                    <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
                 </div>
             </div>
 
-            <!-- Machine Core: 5 Reels + 3D Lever Shaft -->
-            <div class="flex items-center gap-2 md:gap-4">
+            <!-- 5 REELS GRID -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 relative">
                 
-                <!-- 5 REELS GRID -->
-                <div id="reels-grid" class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-3 flex-1">
-                    
-                    <!-- REEL 1: ATTRACTIONS -->
-                    <div class="flex flex-col gap-1.5">
-                        <div class="text-center py-1 px-2 bg-slate-800/90 rounded-t-lg border-b-2 border-emerald-500 text-[11px] font-extrabold uppercase tracking-wider text-emerald-400 flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-mountain-sun"></i> Tham Quan
-                        </div>
-                        <div class="reel-viewport" id="viewport-0">
-                            <div class="payline-guide"></div>
-                            <div class="viewport-overlay"></div>
-                            <div class="reel-container" id="reel-0"></div>
-                        </div>
+                <!-- REEL 1: KHU DU LỊCH -->
+                <div class="flex flex-col gap-2">
+                    <div class="text-center py-1.5 bg-slate-900 border border-amber-500/20 rounded-lg">
+                        <span class="text-xs font-bold text-amber-400 flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-mountain-sun"></i> Điểm Đến
+                        </span>
                     </div>
+                    <div id="viewport-0" class="slot-viewport h-[180px]">
+                        <div id="reel-0" class="reel-strip"></div>
+                    </div>
+                    <button onclick="spinSingleReel(0)" id="btn-spin-0" class="w-full py-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 border border-slate-700 hover:border-amber-500/50 text-slate-200 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 shadow">
+                        <i class="fa-solid fa-arrows-rotate text-amber-400"></i> Quay ô này
+                    </button>
+                </div>
 
-                    <!-- REEL 2: RESTAURANTS -->
-                    <div class="flex flex-col gap-1.5">
-                        <div class="text-center py-1 px-2 bg-slate-800/90 rounded-t-lg border-b-2 border-amber-500 text-[11px] font-extrabold uppercase tracking-wider text-amber-400 flex items-center justify-center gap-1.5">
+                <!-- REEL 2: NHÀ HÀNG -->
+                <div class="flex flex-col gap-2">
+                    <div class="text-center py-1.5 bg-slate-900 border border-amber-500/20 rounded-lg">
+                        <span class="text-xs font-bold text-amber-400 flex items-center justify-center gap-1.5">
                             <i class="fa-solid fa-utensils"></i> Nhà Hàng
-                        </div>
-                        <div class="reel-viewport" id="viewport-1">
-                            <div class="payline-guide"></div>
-                            <div class="viewport-overlay"></div>
-                            <div class="reel-container" id="reel-1"></div>
-                        </div>
+                        </span>
                     </div>
-
-                    <!-- REEL 3: SNACKS -->
-                    <div class="flex flex-col gap-1.5">
-                        <div class="text-center py-1 px-2 bg-slate-800/90 rounded-t-lg border-b-2 border-rose-500 text-[11px] font-extrabold uppercase tracking-wider text-rose-400 flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-cookie-bite"></i> Ăn Vặt
-                        </div>
-                        <div class="reel-viewport" id="viewport-2">
-                            <div class="payline-guide"></div>
-                            <div class="viewport-overlay"></div>
-                            <div class="reel-container" id="reel-2"></div>
-                        </div>
+                    <div id="viewport-1" class="slot-viewport h-[180px]">
+                        <div id="reel-1" class="reel-strip"></div>
                     </div>
+                    <button onclick="spinSingleReel(1)" id="btn-spin-1" class="w-full py-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 border border-slate-700 hover:border-amber-500/50 text-slate-200 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 shadow">
+                        <i class="fa-solid fa-arrows-rotate text-amber-400"></i> Quay ô này
+                    </button>
+                </div>
 
-                    <!-- REEL 4: CAFES -->
-                    <div class="flex flex-col gap-1.5">
-                        <div class="text-center py-1 px-2 bg-slate-800/90 rounded-t-lg border-b-2 border-cyan-500 text-[11px] font-extrabold uppercase tracking-wider text-cyan-400 flex items-center justify-center gap-1.5">
+                <!-- REEL 3: ĂN VẶT -->
+                <div class="flex flex-col gap-2">
+                    <div class="text-center py-1.5 bg-slate-900 border border-amber-500/20 rounded-lg">
+                        <span class="text-xs font-bold text-amber-400 flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-cookie-bite"></i> Món Ăn Vặt
+                        </span>
+                    </div>
+                    <div id="viewport-2" class="slot-viewport h-[180px]">
+                        <div id="reel-2" class="reel-strip"></div>
+                    </div>
+                    <button onclick="spinSingleReel(2)" id="btn-spin-2" class="w-full py-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 border border-slate-700 hover:border-amber-500/50 text-slate-200 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 shadow">
+                        <i class="fa-solid fa-arrows-rotate text-amber-400"></i> Quay ô này
+                    </button>
+                </div>
+
+                <!-- REEL 4: CAFE -->
+                <div class="flex flex-col gap-2">
+                    <div class="text-center py-1.5 bg-slate-900 border border-amber-500/20 rounded-lg">
+                        <span class="text-xs font-bold text-amber-400 flex items-center justify-center gap-1.5">
                             <i class="fa-solid fa-mug-hot"></i> Quán Cafe
-                        </div>
-                        <div class="reel-viewport" id="viewport-3">
-                            <div class="payline-guide"></div>
-                            <div class="viewport-overlay"></div>
-                            <div class="reel-container" id="reel-3"></div>
-                        </div>
+                        </span>
                     </div>
-
-                    <!-- REEL 5: HOTELS -->
-                    <div class="flex flex-col gap-1.5">
-                        <div class="text-center py-1 px-2 bg-slate-800/90 rounded-t-lg border-b-2 border-purple-500 text-[11px] font-extrabold uppercase tracking-wider text-purple-400 flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-hotel"></i> Lưu Trú
-                        </div>
-                        <div class="reel-viewport" id="viewport-4">
-                            <div class="payline-guide"></div>
-                            <div class="viewport-overlay"></div>
-                            <div class="reel-container" id="reel-4"></div>
-                        </div>
+                    <div id="viewport-3" class="slot-viewport h-[180px]">
+                        <div id="reel-3" class="reel-strip"></div>
                     </div>
-
+                    <button onclick="spinSingleReel(3)" id="btn-spin-3" class="w-full py-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 border border-slate-700 hover:border-amber-500/50 text-slate-200 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 shadow">
+                        <i class="fa-solid fa-arrows-rotate text-amber-400"></i> Quay ô này
+                    </button>
                 </div>
 
-                <!-- 3D LEVER MECHANISM -->
-                <div class="hidden lg:flex flex-col items-center justify-center pl-2">
-                    <div id="lever" class="lever-container" onclick="spinAll()">
-                        <div class="lever-base"></div>
-                        <div class="lever-rod">
-                            <div class="lever-knob"></div>
-                        </div>
+                <!-- REEL 5: LƯU TRÚ -->
+                <div class="flex flex-col gap-2">
+                    <div class="text-center py-1.5 bg-slate-900 border border-amber-500/20 rounded-lg">
+                        <span class="text-xs font-bold text-amber-400 flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-hotel"></i> Khách Sạn / Homestay
+                        </span>
                     </div>
+                    <div id="viewport-4" class="slot-viewport h-[180px]">
+                        <div id="reel-4" class="reel-strip"></div>
+                    </div>
+                    <button onclick="spinSingleReel(4)" id="btn-spin-4" class="w-full py-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 border border-slate-700 hover:border-amber-500/50 text-slate-200 text-xs font-bold rounded-lg transition flex items-center justify-center gap-1.5 shadow">
+                        <i class="fa-solid fa-arrows-rotate text-amber-400"></i> Quay ô này
+                    </button>
                 </div>
 
             </div>
 
-            <!-- CONTROLS FOOTER INSIDE SLOT FRAME -->
-            <div class="mt-6 flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-800">
-                <div class="flex items-center gap-3">
-                    <button onclick="spinAll()" id="btn-spin" class="px-8 py-3.5 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-heading font-extrabold text-lg rounded-2xl shadow-lg shadow-amber-500/25 active:scale-95 transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-arrows-spin text-xl animate-spin-slow"></i> QUAY TẤT CẢ (5 VÙNG)
-                    </button>
-                    <button onclick="toggleAudio()" id="btn-audio" class="p-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-2xl border border-slate-700 transition-all">
-                        <i class="fa-solid fa-volume-high text-lg"></i>
-                    </button>
-                </div>
+            <!-- MAIN ACTION CONTROLS -->
+            <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+                
+                <!-- SPIN ALL BUTTON -->
+                <button id="btn-spin-all" onclick="spinAllReels()" class="btn-jackpot px-8 py-3.5 rounded-xl font-extrabold text-slate-950 text-lg uppercase tracking-wide flex items-center justify-center gap-3 w-full sm:w-auto">
+                    <i class="fa-solid fa-play text-xl"></i>
+                    <span>QUAY TẤT CẢ 5 Ô</span>
+                </button>
 
-                <div class="text-xs text-slate-400 flex items-center gap-4">
-                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-400"></i> Lịch trình Tự Động</span>
-                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-bolt text-amber-400"></i> Khắc Dừng Cơ Khí</span>
-                </div>
-            </div>
+                <!-- VIEW ITINERARY BUTTON -->
+                <button id="btn-view-summary" onclick="openItineraryModal()" class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xl font-bold text-amber-400 text-sm transition flex items-center justify-center gap-2 w-full sm:w-auto">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>Xem Chi Tiết Lịch Trình</span>
+                </button>
 
-        </div>
-
-        <!-- RESULTS / ITINERARY SECTION (Clean, NO winner boxes or extra text) -->
-        <div class="bg-slate-900/90 rounded-3xl p-6 border border-slate-800 shadow-xl flex flex-col gap-6">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="font-heading font-extrabold text-xl text-white flex items-center gap-2.5">
-                        <i class="fa-solid fa-map-location-dot text-amber-400"></i> LỊCH TRÌNH ĐƯỢC CHỌN
-                    </h2>
-                    <p class="text-xs text-slate-400 mt-0.5">Chi tiết 5 địa điểm ngẫu nhiên khớp với trải nghiệm Ninh Bình của bạn</p>
-                </div>
-                <button onclick="copyItinerary()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 transition-all flex items-center gap-2">
-                    <i class="fa-regular fa-copy"></i> Sao chép Lịch Trình
+                <!-- MUTE AUDIO TOGGLE -->
+                <button id="btn-audio-toggle" onclick="toggleAudio()" class="px-4 py-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-slate-400 hover:text-amber-400 text-sm transition flex items-center justify-center gap-2">
+                    <i id="audio-icon" class="fa-solid fa-volume-high"></i>
                 </button>
             </div>
 
-            <!-- RESULT CARDS GRID -->
-            <div id="results-container" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                <!-- Dynamic cards populated via JS -->
-            </div>
         </div>
-
     </main>
 
-    <!-- FOOTER -->
-    <footer class="py-4 text-center text-xs text-slate-500 border-t border-slate-800/80 mt-6">
-        Giao diện Ninh Bình Travel Jackpot 3D • Tự động khởi tạo trải nghiệm du lịch thông minh
-    </footer>
+    <!-- DETAIL MODAL -->
+    <div id="itinerary-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 hidden opacity-0 transition-opacity duration-300">
+        <div class="glass-modal max-w-2xl w-full max-h-[90vh] rounded-2xl p-6 overflow-y-auto border border-amber-500/30 flex flex-col justify-between shadow-2xl">
+            <div>
+                <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                    <div class="flex items-center gap-2 text-amber-400 font-bold text-lg">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <span>Lịch Trình Du Lịch Ninh Bình Của Bạn</span>
+                    </div>
+                    <button onclick="closeItineraryModal()" class="text-slate-400 hover:text-white text-xl">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
 
-    <!-- MODAL DETAIL POPUP -->
-    <div id="modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl relative flex flex-col gap-4">
-            <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition-all">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div id="modal-content">
-                <!-- Populated dynamically -->
+                <div id="modal-content-list" class="my-6 space-y-4">
+                    <!-- Dynamic items will be injected here -->
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="text-xs text-slate-400">
+                    Tổng chi phí ước tính: <span id="modal-total-price" class="font-bold text-amber-400 text-base">0 VNĐ</span>
+                </div>
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <button onclick="copyItineraryToClipboard()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 flex items-center justify-center gap-2 flex-1 sm:flex-initial">
+                        <i class="fa-solid fa-copy"></i> Sao Chép
+                    </button>
+                    <button onclick="closeItineraryModal()" class="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-lg flex-1 sm:flex-initial">
+                        Đóng
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // Data Sources from khudiem.js, nhahang.js, anvat.js, cafe.js, luutru.js
-        const DATA = {
-            attractions: [
-                { id: 'a1', name: 'Tràng An Heritage', type: 'Khu du lịch sinh thái', price: '250.000đ', rating: 4.9, img: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=500&q=80', desc: 'Di sản thiên nhiên và văn hóa thế giới với hệ thống hang động chèo thuyền tuyệt đẹp.' },
-                { id: 'a2', name: 'Tam Cốc - Bích Động', type: 'Danh thắng', price: '120.000đ', rating: 4.8, img: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=500&q=80', desc: 'Nam thiên đệ nhị động, ngắm đồng lúa chín vàng dọc dòng sông Ngô Đồng.' },
-                { id: 'a3', name: 'Hang Múa Peak', type: 'Địa điểm Check-in', price: '100.000đ', rating: 4.8, img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=500&q=80', desc: 'Chinh phục 500 bậc đá lên đỉnh núi Múa ngắm toàn cảnh Tam Cốc ngoạn mục.' },
-                { id: 'a4', name: 'Cố Đô Hoa Lư', type: 'Di tích lịch sử', price: '20.000đ', rating: 4.6, img: 'https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?w=500&q=80', desc: 'Kinh đô đầu tiên của nhà nước phong kiến tập quyền Việt Nam.' },
-                { id: 'a5', name: 'Chùa Bái Đính', type: 'Tâm linh', price: 'Miễn phí / Xe điện 60k', rating: 4.7, img: 'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=500&q=80', desc: 'Quần thể chùa lớn nhất Đông Nam Á với nhiều kỷ lục Guinness.' },
-                { id: 'a6', name: 'Vườn Quốc Gia Cúc Phương', type: 'Sinh thái', price: '60.000đ', rating: 4.7, img: 'https://images.unsplash.com/photo-1511497584788-8767611116ef?w=500&q=80', desc: 'Khu bảo tồn thiên nhiên cổ xưa nhất Việt Nam, săn mùa bươm bướm rực rỡ.' }
-            ],
-            restaurants: [
-                { id: 'r1', name: 'Nhà Hàng Chính Thư', type: 'Dê núi & Cơm cháy', price: '150k - 300k', rating: 4.8, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500&q=80', desc: 'Đặc sản Dê núi Ninh Bình nguyên bản tái chanh, nướng mọi thơm lừng.' },
-                { id: 'r2', name: 'Nhà Hàng Đức Dê', type: 'Đặc sản Ninh Bình', price: '200k - 400k', rating: 4.7, img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&q=80', desc: 'Thương hiệu dê núi lâu đời tại trung tâm TP. Ninh Bình.' },
-                { id: 'r3', name: 'Nhà Hàng Thăng Long', type: 'Ẩm thực Tràng An', price: '180k - 350k', rating: 4.6, img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&q=80', desc: 'Không gian rộng rãi gần bến xe Tràng An, phục vụ món ăn truyền thống.' },
-                { id: 'r4', name: 'Nhà Hàng Hoàng Giang', type: 'Dê núi ẩm thực', price: '150k - 300k', rating: 4.5, img: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500&q=80', desc: 'Khuôn viên ven sông thơ mộng, các món dê tẩm ướp đậm đà.' }
-            ],
-            snacks: [
-                { id: 's1', name: 'Cơm Cháy Chà Bông', type: 'Đặc sản quà tặng', price: '35.000đ - 60.000đ', rating: 4.9, img: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&q=80', desc: 'Cơm cháy giòn rụm phủ ruốc thịt đậm đà, nước sốt kho quẹt đặc trưng.' },
-                { id: 's2', name: 'Ốc Núi Tam Điệp', type: 'Ăn vặt đêm', price: '50.000đ - 90.000đ', rating: 4.7, img: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=500&q=80', desc: 'Ốc núi giòn ngọt hấp sả ớt thơm nồng, chỉ có vào mùa mưa.' },
-                { id: 's3', name: 'Bánh Tráng Nướng Phố Cổ', type: 'Ăn vặt vỉa hè', price: '15.000đ - 25.000đ', rating: 4.5, img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&q=80', desc: 'Món ăn vặt giòn ngon nướng than hồng hấp dẫn giới trẻ.' },
-                { id: 's4', name: 'Mắm Tépt Gia Viễn', type: 'Đặc sản truyền thống', price: '80.000đ/hũ', rating: 4.8, img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&q=80', desc: 'Mắm tép chưng thịt đậm vị tốn cơm tuyệt hảo.' }
-            ],
-            cafes: [
-                { id: 'c1', name: 'Bông Cafe Tam Cốc', type: 'Rustic Cafe', price: '30k - 55k', rating: 4.8, img: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=500&q=80', desc: 'Góc cafe phong cách cổ điển hoài niệm nhìn ra dòng sông Tam Cốc.' },
-                { id: 'c2', name: 'Chính Cafe Phố Cổ', type: 'Chill & View', price: '25k - 50k', rating: 4.7, img: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=500&q=80', desc: 'Nằm trong quần thể Phố Cổ Hoa Lư lung linh về đêm.' },
-                { id: 'c3', name: 'An Eco Garden Cafe', type: 'Sân vườn', price: '35k - 65k', rating: 4.9, img: 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=500&q=80', desc: 'Không gian xanh mát hòa quyện thiên nhiên núi đồi.' }
-            ],
-            hotels: [
-                { id: 'h1', name: 'Emeralda Resort Gia Viễn', type: 'Resort 5 Sao', price: '2.200.000đ/đêm', rating: 4.9, img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&q=80', desc: 'Khu nghỉ dưỡng phong cách làng quê Bắc Bộ sang trọng.' },
-                { id: 'h2', name: 'Tam Cốc Garden Resort', type: 'Resort Sinh Thái', price: '1.800.000đ/đêm', rating: 4.8, img: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=500&q=80', desc: 'Bao quanh bởi những cánh đồng lúa và dãy núi đá vôi.' },
-                { id: 'h3', name: 'Tràng An Lamia Bungalow', type: 'Bungalow Chill', price: '850.000đ/đêm', rating: 4.7, img: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&q=80', desc: 'Thiết kế tre nứa mộc mạc, hồ bơi ngoài trời hướng núi.' },
-                { id: 'h4', name: 'Ninh Bình Legend Hotel', type: 'Khách sạn 4 Sao', price: '1.200.000đ/đêm', rating: 4.6, img: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=500&q=80', desc: 'Nằm ngay trung tâm thành phố với tiện nghi hiện đại.' }
-            ]
-        };
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-slate-900 border border-amber-500/40 text-amber-300 px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-amber-400"></i>
+        <span id="toast-message" class="text-xs font-semibold">Đã sao chép lịch trình!</span>
+    </div>
 
-        const CATEGORIES = [
-            { key: 'attractions', label: 'Tham Quan', color: 'emerald' },
-            { key: 'restaurants', label: 'Nhà Hàng', color: 'amber' },
-            { key: 'snacks', label: 'Ăn Vặt', color: 'rose' },
-            { key: 'cafes', label: 'Quán Cafe', color: 'cyan' },
-            { key: 'hotels', label: 'Lưu Trú', color: 'purple' }
+    <script>
+        /* --- 1. DU LỊCH NINH BÌNH DATASET --- */
+        const travelData = [
+            // REEL 0: Điểm đến (Attractions)
+            [
+                { name: "Tràng An Eco Tour", price: "250.000đ/vé", address: "Tân Thành, Ninh Bình", img: "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=400&q=80", tag: "Di sản thiên nhiên" },
+                { name: "Tam Cốc - Bích Động", price: "150.000đ/vé", address: "Ninh Hải, Hoa Lư", img: "https://images.unsplash.com/photo-1508873696983-2df5057d225b?auto=format&fit=crop&w=400&q=80", tag: "Cảnh quan sông núi" },
+                { name: "Hang Múa Peak", price: "100.000đ/vé", address: "Ninh Xuân, Hoa Lư", img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80", tag: "Check-in đỉnh núi" },
+                { name: "Cố Đô Hoa Lư", price: "20.000đ/vé", address: "Trường Yên, Hoa Lư", img: "https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?auto=format&fit=crop&w=400&q=80", tag: "Di tích lịch sử" },
+                { name: "Chùa Bái Đính", price: "Miễn phí (Xe điện 60k)", address: "Gia Sinh, Gia Viễn", img: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?auto=format&fit=crop&w=400&q=80", tag: "Tâm linh danh thắng" },
+                { name: "Vườn Quốc Gia Cúc Phương", price: "60.000đ/vé", address: "Nho Quan, Ninh Bình", img: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=400&q=80", tag: "Khám phá thiên nhiên" }
+            ],
+            // REEL 1: Nhà hàng (Restaurants)
+            [
+                { name: "Nhà Hàng Dê Núi Chính Thư", price: "150.000đ - 350.000đ", address: "Ninh Xuân, Hoa Lư", img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80", tag: "Đặc sản Dê núi" },
+                { name: "Nhà Hàng Thăng Long", price: "200.000đ - 400.000đ", address: "Tràng An, Trường Yên", img: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80", tag: "Cơm cháy & Dê nướng" },
+                { name: "Nhà Hàng Đất Cảng", price: "120.000đ - 300.000đ", address: "Tân Thành, TP. Ninh Bình", img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=400&q=80", tag: "Ẩm thực miền Bắc" },
+                { name: "Nhà Hàng Hoàng Giang", price: "180.000đ - 350.000đ", address: "Trường Yên, Hoa Lư", img: "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=400&q=80", tag: "Cảnh quan bờ sông" }
+            ],
+            // REEL 2: Ăn vặt (Snacks)
+            [
+                { name: "Cơm Cháy Ruốc Ninh Bình", price: "35.000đ - 70.000đ", address: "Chợ Rồng, TP. Ninh Bình", img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=400&q=80", tag: "Đặc sản làm quà" },
+                { name: "Bún Mọc Tố Như", price: "40.000đ - 60.000đ", address: "Kim Sơn, Ninh Bình", img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=400&q=80", tag: "Món ăn sáng truyền thống" },
+                { name: "Mắm Tép Chưng Thịt Gia Viễn", price: "50.000đ - 100.000đ", address: "Thị trấn Me, Gia Viễn", img: "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=400&q=80", tag: "Đậm đà hương vị" },
+                { name: "Bánh Tráng Nướng & Chè Phố", price: "20.000đ - 35.000đ", address: "Phố cổ Hoa Lư", img: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=400&q=80", tag: "Ăn vặt buổi tối" }
+            ],
+            // REEL 3: Quán Cafe (Cafes)
+            [
+                { name: "Brick Coffee Shop", price: "30.000đ - 55.000đ", address: "Phố cổ Hoa Lư, TP. Ninh Bình", img: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=400&q=80", tag: "Phong cách hoài cổ" },
+                { name: "Aroma Cafe & Restaurant", price: "35.000đ - 65.000đ", address: "Ninh Khánh, TP. Ninh Bình", img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=400&q=80", tag: "View đẹp lung linh" },
+                { name: "Chốn Cafe Tam Cốc", price: "25.000đ - 50.000đ", address: "Văn Lâm, Ninh Hải", img: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=400&q=80", tag: "Yên bình giữa cánh đồng" },
+                { name: "Bụi Cafe Phố Cổ", price: "20.000đ - 45.000đ", address: "Đường Lương Văn Tụy", img: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=400&q=80", tag: "Góc thư giãn cuối tuần" }
+            ],
+            // REEL 4: Lưu trú (Hotels/Homestays)
+            [
+                { name: "Emeralda Resort Ninh Bình", price: "1.800.000đ/đêm", address: "Gia Vân, Gia Viễn", img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=400&q=80", tag: "Resort 5 Sao đẳng cấp" },
+                { name: "Tam Cốc Garden Resort", price: "2.200.000đ/đêm", address: "Hải Nham, Ninh Hải", img: "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=400&q=80", tag: "Nghỉ dưỡng thiên nhiên" },
+                { name: "Tràng An Bungalow", price: "600.000đ/đêm", address: "Tràng An, Ninh Xuân", img: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=400&q=80", tag: "Homestay hồ bơi núi" },
+                { name: "Chez Beo Homestay", price: "450.000đ/đêm", address: "Khu năng, Khả Lương", img: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=400&q=80", tag: "Chòi đầm sen yên bình" }
+            ]
         ];
 
-        // State Management
-        let isSpinning = false;
-        let audioEnabled = true;
-        let selectedFilter = 'ALL';
-        let currentResults = [null, null, null, null, null];
+        /* --- STREAMING_CHUNK:Web Audio API Synthesizer Setup... --- */
+        let audioCtx = null;
+        let isMuted = false;
 
-        // Web Audio API Sound generator
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playClickSound() {
-            if (!audioEnabled) return;
-            try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(220 + Math.random() * 80, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
-            } catch(e) {}
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
         }
 
+        // Mechanical Click Sound
+        function playTickSound() {
+            if (isMuted) return;
+            initAudioContext();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.03);
+            
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.03);
+        }
+
+        // Solid Reel Stop Clunk
         function playStopSound() {
-            if (!audioEnabled) return;
-            try {
+            if (isMuted) return;
+            initAudioContext();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.08);
+            
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
+        }
+
+        // Celebratory Win Chime
+        function playWinChime() {
+            if (isMuted) return;
+            initAudioContext();
+            
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            notes.forEach((freq, idx) => {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
+                
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(520, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(260, audioCtx.currentTime + 0.15);
-                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.08);
+                
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime + idx * 0.08);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.08 + 0.3);
+                
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.15);
-            } catch(e) {}
+                
+                osc.start(audioCtx.currentTime + idx * 0.08);
+                osc.stop(audioCtx.currentTime + idx * 0.08 + 0.3);
+            });
         }
 
         function toggleAudio() {
-            audioEnabled = !audioEnabled;
-            const btn = document.getElementById('btn-audio');
-            btn.innerHTML = audioEnabled ? 
-                '<i class="fa-solid fa-volume-high text-lg"></i>' : 
-                '<i class="fa-solid fa-volume-xmark text-lg text-rose-400"></i>';
+            isMuted = !isMuted;
+            const icon = document.getElementById('audio-icon');
+            if (isMuted) {
+                icon.className = "fa-solid fa-volume-xmark text-red-400";
+            } else {
+                icon.className = "fa-solid fa-volume-high text-amber-400";
+                playTickSound();
+            }
         }
 
-        // Build 3D Reel Cylinder elements
-        function buildReels() {
-            CATEGORIES.forEach((cat, reelIndex) => {
-                const container = document.getElementById(`reel-${reelIndex}`);
-                container.innerHTML = '';
-                const items = DATA[cat.key];
-                const cardCount = items.length;
-                const angleStep = 360 / cardCount;
-                const radius = Math.round((190 / 2) / Math.tan(Math.PI / cardCount));
+        /* --- STREAMING_CHUNK:Reel Building & Rendering Logic... --- */
+        const CARD_HEIGHT = 180;
+        const currentIndices = [0, 0, 0, 0, 0];
+        const isSpinning = [false, false, false, false, false];
 
-                items.forEach((item, itemIndex) => {
-                    const card = document.createElement('div');
-                    card.className = 'reel-card';
-                    const angle = angleStep * itemIndex;
-                    card.style.transform = `rotateX(${angle}deg) translateZ(${radius + 20}px)`;
+        // Fallback Image SVG Generator to prevent broken images
+        function getFallbackSvg(title, categoryIndex) {
+            const colors = ['#d97706', '#059669', '#2563eb', '#7c3aed', '#db2777'];
+            const bg = colors[categoryIndex % colors.length];
+            return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><rect width="100%" height="100%" fill="${encodeURIComponent(bg)}"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="sans-serif" font-weight="bold" font-size="20">${encodeURIComponent(title)}</text></svg>`;
+        }
 
-                    card.innerHTML = `
-                        <div class="relative h-24 w-full rounded-lg overflow-hidden mb-2">
-                            <img src="${item.img}" class="w-full h-full object-cover" alt="${item.name}" onerror="this.src='https://placehold.co/400x250/1e293b/fff?text=Ninh+Binh'">
-                            <span class="absolute top-1 right-1 px-1.5 py-0.5 bg-slate-950/80 rounded text-[10px] text-amber-300 font-bold">
-                                <i class="fa-solid fa-star text-[9px]"></i> ${item.rating}
-                            </span>
+        function createCardHTML(item, catIdx) {
+            const fallback = getFallbackSvg(item.name, catIdx);
+            return `
+                <div class="slot-card w-full rounded-lg border border-slate-800 relative group overflow-hidden">
+                    <img src="${item.img}" onerror="this.onerror=null; this.src='${fallback}';" class="absolute inset-0 w-full h-full object-cover opacity-35 group-hover:opacity-50 transition" alt="${item.name}">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent"></div>
+                    
+                    <div class="relative z-10 w-full flex justify-between items-start">
+                        <span class="px-2 py-0.5 text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded">
+                            ${item.tag}
+                        </span>
+                    </div>
+
+                    <div class="relative z-10 w-full text-left">
+                        <h3 class="text-sm font-bold text-white line-clamp-1 leading-snug">${item.name}</h3>
+                        <div class="flex items-center gap-1 text-[11px] text-amber-400 font-medium mt-0.5">
+                            <i class="fa-solid fa-tag text-[9px]"></i>
+                            <span>${item.price}</span>
                         </div>
-                        <h4 class="font-bold text-xs text-white line-clamp-1 leading-snug">${item.name}</h4>
-                        <p class="text-[10px] text-slate-400 line-clamp-1">${item.type}</p>
-                        <div class="mt-auto pt-1 flex justify-between items-center text-[10px] border-t border-slate-800">
-                            <span class="text-amber-400 font-semibold">${item.price}</span>
-                            <i class="fa-solid fa-circle-info text-slate-500"></i>
+                        <div class="flex items-center gap-1 text-[10px] text-slate-400 mt-0.5 line-clamp-1">
+                            <i class="fa-solid fa-location-dot text-[9px]"></i>
+                            <span>${item.address}</span>
                         </div>
-                    `;
-                    container.appendChild(card);
-                });
+                    </div>
+                </div>
+            `;
+        }
 
-                // Store total cards and step on DOM node
-                container.dataset.cardCount = cardCount;
-                container.dataset.angleStep = angleStep;
-                container.dataset.radius = radius + 20;
+        // Initialize Reel Strips with duplicated items for smooth endless rolling
+        function initReels() {
+            travelData.forEach((dataset, reelIdx) => {
+                const reelElem = document.getElementById(`reel-${reelIdx}`);
+                let html = '';
+                // Repeat dataset multiple times for infinite scroll simulation
+                for (let i = 0; i < 15; i++) {
+                    dataset.forEach(item => {
+                        html += createCardHTML(item, reelIdx);
+                    });
+                }
+                reelElem.innerHTML = html;
+                // Set initial position
+                reelElem.style.transform = `translateY(0px)`;
             });
         }
 
-        function spinAll() {
-            if (isSpinning) return;
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+        /* --- STREAMING_CHUNK:Smooth Spring Friction Animation Algorithm... --- */
+        function spinSingleReel(reelIdx, delay = 0) {
+            if (isSpinning[reelIdx]) return;
+            
+            initAudioContext();
+            isSpinning[reelIdx] = true;
 
-            isSpinning = true;
-            const btnSpin = document.getElementById('btn-spin');
-            const lever = document.getElementById('lever');
+            const btn = document.getElementById(`btn-spin-${reelIdx}`);
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
 
-            btnSpin.disabled = true;
-            btnSpin.classList.add('opacity-50', 'cursor-not-allowed');
-
-            // Trigger lever pull 3D animation
-            lever.classList.add('lever-pulled');
-            setTimeout(() => lever.classList.remove('lever-pulled'), 300);
-
-            // Spin each reel sequentially
-            CATEGORIES.forEach((cat, index) => {
-                const delay = index * 300; // staggered start
-                const spinDuration = 2000 + index * 400; // sequential stop
-
-                setTimeout(() => {
-                    spinSingleReel(index, spinDuration);
-                }, delay);
-            });
-        }
-
-        function spinSingleReel(reelIndex, duration) {
-            const container = document.getElementById(`reel-${reelIndex}`);
-            const items = DATA[CATEGORIES[reelIndex].key];
-            const cardCount = items.length;
-            const angleStep = 360 / cardCount;
-
-            const selectedIdx = Math.floor(Math.random() * cardCount);
-            currentResults[reelIndex] = items[selectedIdx];
-
-            // Calculate total rotation cycles (multiple 360s + targeted item position)
-            const extraRounds = 5 + reelIndex * 2;
-            const targetAngle = -(extraRounds * 360 + selectedIdx * angleStep);
-
-            let startTime = null;
-
-            function animateSpin(timestamp) {
-                if (!startTime) startTime = timestamp;
-                const elapsed = timestamp - startTime;
-                const progress = Math.min(elapsed / duration, 1);
+            setTimeout(() => {
+                const dataset = travelData[reelIdx];
+                const totalItems = dataset.length;
                 
-                // Cubic ease-out curve for mechanical spin
-                const easeOut = 1 - Math.pow(1 - progress, 3);
-                const currentAngle = targetAngle * easeOut;
+                // Random target index
+                const targetIdx = Math.floor(Math.random() * totalItems);
+                currentIndices[reelIdx] = targetIdx;
 
-                container.style.transform = `rotateX(${currentAngle}deg)`;
+                // Physics/Animation parameters
+                const reelElem = document.getElementById(`reel-${reelIdx}`);
+                const extraRounds = 4 + Math.floor(Math.random() * 2); // 4-5 full rotations
+                const targetOffset = (extraRounds * totalItems + targetIdx) * CARD_HEIGHT;
 
-                // Sound trigger on rotational intervals
-                if (Math.floor(Math.abs(currentAngle) / angleStep) !== container.dataset.lastStep) {
-                    playClickSound();
-                    container.dataset.lastStep = Math.floor(Math.abs(currentAngle) / angleStep);
+                let start = null;
+                const duration = 2200; // ms
+                let lastTickOffset = 0;
+
+                // Easing cubic bounce function for smooth slowing down & spring bounce at end
+                function easeOutElastic(t) {
+                    const c4 = (2 * Math.PI) / 3;
+                    return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
                 }
 
-                if (progress < 1) {
-                    requestAnimationFrame(animateSpin);
-                } else {
-                    // Bounce animation on stop
-                    playStopSound();
-                    const viewport = document.getElementById(`viewport-${reelIndex}`);
-                    viewport.classList.add('bounce-anim');
-                    setTimeout(() => viewport.classList.remove('bounce-anim'), 300);
+                function easeOutCubic(t) {
+                    return 1 - Math.pow(1 - t, 3);
+                }
 
-                    // Check if all reels stopped
-                    if (reelIndex === CATEGORIES.length - 1) {
-                        isSpinning = false;
-                        const btnSpin = document.getElementById('btn-spin');
-                        btnSpin.disabled = false;
-                        btnSpin.classList.remove('opacity-50', 'cursor-not-allowed');
-                        renderResults();
+                function animateReel(timestamp) {
+                    if (!start) start = timestamp;
+                    const elapsed = timestamp - start;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    // Smooth easing
+                    const easedProgress = easeOutCubic(progress);
+                    const currentY = easedProgress * targetOffset;
+
+                    reelElem.style.transform = `translateY(-${currentY % (totalItems * CARD_HEIGHT * 5)}px)`;
+
+                    // Trigger mechanical ticks as cards pass by
+                    if (currentY - lastTickOffset >= CARD_HEIGHT / 2) {
+                        playTickSound();
+                        lastTickOffset = currentY;
+                    }
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animateReel);
+                    } else {
+                        // Dừng chính xác vị trí mục tiêu
+                        const finalY = targetIdx * CARD_HEIGHT;
+                        reelElem.style.transform = `translateY(-${finalY}px)`;
+                        
+                        playStopSound();
+                        isSpinning[reelIdx] = false;
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50');
+
+                        // Check if all reels stopped
+                        if (isSpinning.every(s => !s)) {
+                            onSpinAllComplete();
+                        }
                     }
                 }
-            }
 
-            requestAnimationFrame(animateSpin);
+                requestAnimationFrame(animateReel);
+
+            }, delay);
         }
 
-        function renderResults() {
-            const container = document.getElementById('results-container');
-            container.innerHTML = '';
+        // Spin All 5 Reels Simultaneously with staggered delay
+        function spinAllReels() {
+            if (isSpinning.some(s => s)) return;
+            
+            const btnAll = document.getElementById('btn-spin-all');
+            btnAll.disabled = true;
+            btnAll.classList.add('opacity-50');
 
-            currentResults.forEach((item, index) => {
-                if (!item) return;
-                const cat = CATEGORIES[index];
+            travelData.forEach((_, idx) => {
+                spinSingleReel(idx, idx * 180); // Stagger each reel by 180ms
+            });
+        }
 
+        function onSpinAllComplete() {
+            const btnAll = document.getElementById('btn-spin-all');
+            btnAll.disabled = false;
+            btnAll.classList.remove('opacity-50');
+
+            // Play Win sound & trigger celebration confetti
+            playWinChime();
+            confetti({
+                particleCount: 70,
+                spread: 60,
+                origin: { y: 0.7 }
+            });
+        }
+
+        /* --- STREAMING_CHUNK:Itinerary Detail Modal Functions... --- */
+        function openItineraryModal() {
+            const listElem = document.getElementById('modal-content-list');
+            listElem.innerHTML = '';
+            
+            let totalPriceEstimate = 0;
+            const categoryTitles = ["Điểm Đến", "Nhà Hàng", "Ăn Vặt", "Quán Cafe", "Nghỉ Dưỡng"];
+            const icons = ["fa-mountain-sun", "fa-utensils", "fa-cookie-bite", "fa-mug-hot", "fa-hotel"];
+
+            currentIndices.forEach((selectedIdx, catIdx) => {
+                const item = travelData[catIdx][selectedIdx];
+                
                 const card = document.createElement('div');
-                card.className = 'bg-slate-800/80 rounded-2xl p-3 border border-slate-700/60 hover:border-amber-500/50 transition-all flex flex-col justify-between cursor-pointer group';
-                card.onclick = () => openModal(item, cat.label);
-
+                card.className = "flex items-center gap-4 p-3 bg-slate-900 border border-slate-800 rounded-xl";
                 card.innerHTML = `
-                    <div>
-                        <div class="relative h-32 w-full rounded-xl overflow-hidden mb-3">
-                            <img src="${item.img}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="${item.name}">
-                            <span class="absolute top-2 left-2 px-2 py-0.5 bg-slate-950/80 backdrop-blur rounded-lg text-[10px] font-bold text-amber-400 border border-amber-500/30">
-                                ${cat.label}
-                            </span>
-                        </div>
-                        <h3 class="font-bold text-sm text-white line-clamp-1 group-hover:text-amber-400 transition-colors">${item.name}</h3>
-                        <p class="text-xs text-slate-400 line-clamp-2 mt-1 leading-relaxed">${item.desc}</p>
+                    <div class="w-12 h-12 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold shrink-0">
+                        <i class="fa-solid ${icons[catIdx]} text-lg"></i>
                     </div>
-                    <div class="mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs">
-                        <span class="font-bold text-amber-400">${item.price}</span>
-                        <span class="text-slate-400"><i class="fa-solid fa-star text-amber-400 mr-1"></i>${item.rating}</span>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wider">${categoryTitles[catIdx]}</div>
+                        <div class="text-sm font-bold text-slate-100 truncate">${item.name}</div>
+                        <div class="text-xs text-slate-400 truncate"><i class="fa-solid fa-location-dot text-[10px] text-amber-500"></i> ${item.address}</div>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <div class="text-xs font-semibold text-amber-300">${item.price}</div>
                     </div>
                 `;
-                container.appendChild(card);
+                listElem.appendChild(card);
             });
-        }
 
-        function openModal(item, catLabel) {
-            const modal = document.getElementById('modal');
-            const content = document.getElementById('modal-content');
+            document.getElementById('modal-total-price').innerText = "Tùy thuộc nhu cầu (Ước tính từ 500k - 2tr VNĐ)";
 
-            content.innerHTML = `
-                <div class="relative h-48 w-full rounded-2xl overflow-hidden mb-4">
-                    <img src="${item.img}" class="w-full h-full object-cover" alt="${item.name}">
-                    <span class="absolute top-3 left-3 px-3 py-1 bg-slate-950/80 backdrop-blur rounded-xl text-xs font-bold text-amber-400 border border-amber-500/30">
-                        ${catLabel}
-                    </span>
-                </div>
-                <h3 class="font-heading font-black text-2xl text-white">${item.name}</h3>
-                <div class="flex items-center gap-4 text-xs text-slate-400 my-1">
-                    <span><i class="fa-solid fa-star text-amber-400 mr-1"></i>${item.rating} / 5.0</span>
-                    <span><i class="fa-solid fa-tag text-amber-400 mr-1"></i>${item.type}</span>
-                </div>
-                <p class="text-sm text-slate-300 leading-relaxed my-2">${item.desc}</p>
-                <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 flex justify-between items-center mt-2">
-                    <span class="text-xs text-slate-400">Chi phí ước tính:</span>
-                    <span class="text-base font-bold text-amber-400">${item.price}</span>
-                </div>
-                <button onclick="closeModal()" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl mt-2 transition-all">
-                    Đóng Chi Tiết
-                </button>
-            `;
+            const modal = document.getElementById('itinerary-modal');
             modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
         }
 
-        function closeModal() {
-            document.getElementById('modal').classList.add('hidden');
+        function closeItineraryModal() {
+            const modal = document.getElementById('itinerary-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
         }
 
-        function setFilterMode(mode) {
-            selectedFilter = mode;
-            ['ALL', '1N1D', '2N1D', '3N2D'].forEach(m => {
-                const btn = document.getElementById(`btn-mode-${m}`);
-                if (m === mode) {
-                    btn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow';
-                } else {
-                    btn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all';
-                }
-            });
-            spinAll();
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
         }
 
-        function copyItinerary() {
-            if (!currentResults[0]) return;
-            const text = currentResults.map((item, idx) => `${CATEGORIES[idx].label}: ${item.name} (${item.price})`).join('\n');
+        function copyItineraryToClipboard() {
+            const categoryTitles = ["Điểm Đến", "Nhà Hàng", "Ăn Vặt", "Quán Cafe", "Nghỉ Dưỡng"];
+            let text = "🌟 LỊCH TRÌNH DU LỊCH NINH BÌNH CỦA TÔI 🌟\n\n";
             
+            currentIndices.forEach((selectedIdx, catIdx) => {
+                const item = travelData[catIdx][selectedIdx];
+                text += `📍 ${categoryTitles[catIdx]}: ${item.name}\n   - Giá: ${item.price}\n   - Địa chỉ: ${item.address}\n\n`;
+            });
+            text += "Gợi ý tự động từ Ninh Binh Travel Jackpot 3D!";
+
+            // ExecCommand Fallback for clipboard safety
             const dummy = document.createElement("textarea");
             document.body.appendChild(dummy);
-            dummy.value = `--- LỊCH TRÌNH NINH BÌNH MYSTERY TOUR ---\n` + text;
+            dummy.value = text;
             dummy.select();
             document.execCommand("copy");
             document.body.removeChild(dummy);
 
-            alert("Đã sao chép lịch trình du lịch Ninh Bình vào bộ nhớ tạm!");
+            showToast("Đã sao chép lịch trình vào bộ nhớ tạm!");
         }
 
-        // Initialize on Load
+        // Initialize setup on load
         window.onload = function() {
-            buildReels();
-            spinAll(); // Initial auto spin
+            initReels();
         };
     </script>
 </body>
